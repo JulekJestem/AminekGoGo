@@ -1,0 +1,42 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Secrets and local provider config
+.env
+.env.*
+!.env.example
+providers.json
+*.pem
+*.key
+credentials.json
+secrets.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.swp
+*~
+
+# Local scratch
+*.log
+.tmp/
+tmp/
+temp/
+*.bak
+*.tmp
+gocoords-styles-before-red.css
+
+# Cloudflare Wrangler
+.wrangler/
+node_modules/
+.dev.vars
+

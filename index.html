@@ -1,0 +1,40 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101411">
+  <title>AminekGoGo</title>
+  <link rel="icon" type="image/png" href="assets/aminekgogo-favicon.png?v=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="styles.css?v=aminekgogo-red-brand-20260929">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#" aria-label="AminekGoGo home"><img class="brand-mark" src="assets/aminekgogo-logo.png" alt=""><span>Aminek<span class="brand-light">GoGo</span></span></a>
+      <span id="region-label" hidden>Choose location</span>
+      <div class="side-label"></div>
+      <button class="nav-item active" id="live-nav" type="button" aria-label="Live map" title="Live map"><span class="nav-icon">⌖</span> Live map <span class="nav-count" id="total-count">0</span></button>
+      <button class="nav-item" id="world-nav" type="button" aria-label="World hotspots" title="World hotspots"><span class="nav-icon">◎</span> World hotspots <span class="nav-count" id="hotspot-count">—</span></button>
+      <div class="side-spacer"></div>
+      <div class="feed-card"><div class="feed-status"><i></i><span id="feed-label">Choose a scan location</span></div><p id="feed-detail">Search for a place or click the map to scan.</p></div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar"><div class="mobile-brand"><img class="brand-mark" src="assets/aminekgogo-logo.png" alt=""> <span>Aminek<span class="brand-light">GoGo</span></span></div><div class="breadcrumb"><strong>AminekGoGo Live Tracker</strong></div><div class="top-actions"><div class="live-pill"><i></i> <strong id="status-mode">LIVE</strong> <span id="refresh-counter">60s</span></div><button class="icon-button" id="refresh-now" title="Refresh now" aria-label="Refresh now">↻</button></div></header>
+      <section class="page-heading"><div><div class="eyebrow"><span class="eyebrow-dot"></span> FIELD REPORT <span class="eyebrow-date" id="today-date"></span></div><h1>Spawn <span>radar</span></h1><p class="subtitle">Gotta catch em all? Nah, just the best.</p></div><div class="heading-stats"><div class="stat"><span class="stat-icon gold">✦</span><div><small id="high-iv-label">HIGH IV</small><strong id="high-iv-count">0</strong></div></div><div class="stat"><span class="stat-icon coral">⌁</span><div><small id="high-cp-label">HIGH CP</small><strong id="high-cp-count">0</strong></div></div></div></section>
+      <section class="toolbar"><div class="search-wrap"><span>⌕</span><input id="search" type="search" placeholder="Search Pokémon" autocomplete="off"></div><div class="filter-control"><button class="filter-button" id="filter-toggle" type="button" aria-expanded="false" aria-controls="filter-panel">⚲ Filter <span id="filter-active-count">2 active</span></button><div class="filter-panel" id="filter-panel" hidden><div class="filter-panel-head"><strong>Spawn filters</strong><button id="filter-close" type="button" aria-label="Close filters">×</button></div><p class="filter-panel-hint">Show Pokémon that meet either active minimum.</p><div class="threshold-option"><div class="threshold-heading"><label for="filter-iv-enabled"><input id="filter-iv-enabled" type="checkbox" checked> Minimum IV</label><output id="filter-iv-value" for="filter-iv">90%</output></div><input id="filter-iv" type="range" min="80" max="100" step="1" value="90" aria-label="Minimum IV, 80 to 100 percent"></div><div class="threshold-option"><div class="threshold-heading"><label for="filter-cp-enabled"><input id="filter-cp-enabled" type="checkbox" checked> Minimum CP</label><output id="filter-cp-value" for="filter-cp">2,500</output></div><input id="filter-cp" type="range" min="0" max="3000" step="50" value="2500" aria-label="Minimum CP, up to 3,000 or higher"></div><div class="filter-panel-actions"><button id="filter-reset" type="button">Reset defaults</button><span>IV slider starts at 80%</span></div></div></div><button class="sort-button" id="sort-button">↕ <span>Best match</span><b>⌄</b></button></section>
+      <div class="content-grid"><section class="sightings-panel"><div class="panel-heading"><div><h2 id="list-heading">Nearby sightings <span class="live-dot"></span></h2><p id="updated-label">Updated just now</p></div><div class="panel-actions"><button id="scan-everything" class="scan-all-button" type="button" hidden>Show everything</button><button class="view-toggle" aria-label="List view">☷</button></div></div><div id="spawn-list" class="spawn-list"></div><div id="empty-state" class="empty-state" hidden><span>⌕</span><strong>No sightings found</strong><p>Try changing your filters or search.</p><button id="coverage-jump" class="coverage-jump" type="button" hidden></button></div><div class="list-footer"><span>Showing <strong id="showing-count">0</strong> of <strong id="all-count">0</strong> sightings</span><span id="list-footer-note">Auto-refresh <b>●</b></span></div></section>
+      <section class="map-panel"><div class="map-search"><label class="map-search-input" for="map-place-query"><span aria-hidden="true">⌕</span><input id="map-place-query" type="search" placeholder="Search for a city, place, or coordinates…" autocomplete="off" aria-autocomplete="list" aria-controls="map-place-results"><button id="map-place-clear" type="button" aria-label="Clear place search" hidden>×</button></label><div id="map-place-results" class="map-place-results" role="listbox" aria-label="Place suggestions" hidden></div></div><div class="map-topline"><div><span class="map-title">Spawn map</span><small id="map-subtitle">Showing all sightings</small></div><button id="locate-button" class="locate-button" title="Fit all sightings">⛶</button></div><div id="map" aria-label="Map showing Pokémon spawn locations"></div><div class="map-legend"><span><i class="legend-high-iv">★</i> High IV</span><span><i class="legend-high-cp">↗</i> High CP</span><span><i class="legend-other">•</i> Other</span></div><div id="map-note" class="map-note">Click map to set a scan pin</div></section></div>
+      <footer class="page-footer"><span>AminekGoGo is a fan-made community tool and is not affiliated with Niantic or Nintendo.</span><span>Hotspot index: <a href="https://github.com/KernelX-debug/Discord-Bot_Lucario_Moonaniphp" target="_blank" rel="noreferrer">community curated list</a> · Data may be delayed or inaccurate.</span></footer>
+    </main>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="config.js?v=1"></script>
+  <script src="app.js?v=aminekgogo-pages-proxy-20260929"></script>
+</body>
+</html>
