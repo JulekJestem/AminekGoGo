@@ -103,6 +103,14 @@ function loadHotspot(h){
 }
 $('world-nav').addEventListener('click',showWorldHotspots);
 function scanCenters(items){const centers=[];[...items].sort((a,b)=>(Number(b.point_count)||0)-(Number(a.point_count)||0)).forEach(h=>{if(!centers.some(c=>distanceKm(Number(c.lat),Number(c.lon),Number(h.lat),Number(h.lon))<MAX_SCAN_RADIUS_KM-5))centers.push(h)});return centers}
+const OUTER_RINGS=[{km:50,count:6},{km:100,count:8}],OUTER_EMPTY_MS=10*60*1000,outerEmpty=new Map();
+function offsetPoint(lat,lon,km,bearing){const r=Math.PI/180,d=km/6371,b=bearing*r,p1=lat*r,l1=lon*r,p2=Math.asin(Math.sin(p1)*Math.cos(d)+Math.cos(p1)*Math.sin(d)*Math.cos(b)),l2=l1+Math.atan2(Math.sin(b)*Math.sin(d)*Math.cos(p1),Math.cos(d)-Math.sin(p1)*Math.sin(p2));return {lat:p2/r,lon:((l2/r+540)%360)-180}}
+function outerCenters(core){
+ const chosen=[...core],outer=[];
+ core.forEach(h=>{const base=[hotspotName(h),h.country_code].filter(Boolean).join(', ');OUTER_RINGS.forEach(ring=>{for(let i=0;i<ring.count;i++){const p=offsetPoint(Number(h.lat),Number(h.lon),ring.km,i*360/ring.count);if(Math.abs(p.lat)>85||chosen.some(c=>distanceKm(Number(c.lat),Number(c.lon),p.lat,p.lon)<MAX_SCAN_RADIUS_KM-5))continue;const point={lat:Number(p.lat.toFixed(4)),lon:Number(p.lon.toFixed(4)),outer:true,label:`~${ring.km} km from ${base}`};chosen.push(point);outer.push(point)}})});
+ return outer;
+}
+function outerKey(p){return `${p.lat},${p.lon}`}
 async function scanEverything(){
  const run=++everythingRun;feedRequest++;clearInterval(refreshTimer);
  let items;try{items=await loadHotspotIndex()}catch(error){if(run!==everythingRun)return;$('feed-label').textContent='Hotspot index unavailable';$('feed-detail').textContent=error.message;if(everythingMode)startRefresh();return}
@@ -110,19 +118,19 @@ async function scanEverything(){
  const refreshing=everythingMode&&spawns.length>0;
  globalMode=false;everythingMode=true;everythingScanning=true;everythingPaused=false;showFavorites=false;document.querySelector('.filter-control').hidden=false;$('sort-button').hidden=false;activateNav('world-nav');
  if(!refreshing){$('search').value='';searchTerm=''}
- const centers=scanCenters(items),found=new Map(),endpoint=apiUrl('/api/nearby');let next=0,done=0,failed=0,lastDraw=0;
- const progress=()=>{const text=`${refreshing?'Refreshing · ':''}Scanned ${done} of ${centers.length} areas · ${found.size.toLocaleString()} Pokémon found${failed?` · ${failed} failed`:''}`;$('updated-label').textContent=text;$('feed-detail').textContent=text};
+ const core=scanCenters(items),now=Date.now(),outer=outerCenters(core).filter(p=>!(outerEmpty.get(outerKey(p))>now-OUTER_EMPTY_MS)),centers=[...core,...outer],found=new Map(),endpoint=apiUrl('/api/nearby');let next=0,done=0,failed=0,lastDraw=0;
+ const progress=()=>{const text=`${refreshing?'Refreshing · ':''}Scanned ${done} of ${centers.length} areas (${outer.length} wider) · ${found.size.toLocaleString()} Pokémon found${failed?` · ${failed} failed`:''}`;$('updated-label').textContent=text;$('feed-detail').textContent=text};
  $('feed-label').textContent=refreshing?'Refreshing every hotspot':'Scanning every hotspot';progress();startRefresh();
  if(!refreshing){spawns=[];setEmptyState('Scanning hotspots…','Pokémon appear here as each area finishes.')}
  render();
  async function worker(){
   while(next<centers.length&&run===everythingRun){
-   const h=centers[next++],label=[hotspotName(h),h.country_code].filter(Boolean).join(', ');
+   const h=centers[next++],label=h.outer?h.label:[hotspotName(h),h.country_code].filter(Boolean).join(', '),place=h.outer?label:`Near ${label}`;
    try{
     const params=new URLSearchParams({lat:String(h.lat),lon:String(h.lon),radius_km:String(MAX_SCAN_RADIUS_KM),layers:'spawns',limit:'800'});
     const response=await fetch(`${endpoint}?${params}`,{headers:{Accept:'application/json'},cache:'no-store'});if(!response.ok)throw new Error(`Live feed returned HTTP ${response.status}`);
-    const data=await response.json(),batch=await addPokemonNames((Array.isArray(data?.spawns)?data.spawns:[]).map((item,i)=>normalize({...item,location:item.location??`Near ${label}`},i)).filter(Boolean));
-    if(run!==everythingRun)return;batch.forEach(s=>{if(!found.has(s.id))found.set(s.id,s)});
+    const data=await response.json(),batch=await addPokemonNames((Array.isArray(data?.spawns)?data.spawns:[]).map((item,i)=>normalize({...item,location:item.location??place},i)).filter(Boolean));
+    if(run!==everythingRun)return;if(h.outer){if(batch.length)outerEmpty.delete(outerKey(h));else outerEmpty.set(outerKey(h),Date.now())}batch.forEach(s=>{if(!found.has(s.id))found.set(s.id,s)});
    }catch(error){failed++;console.warn(`Could not scan ${label}:`,error)}
    if(run!==everythingRun)return;
    done++;progress();if(!refreshing){spawns=[...found.values()];if(Date.now()-lastDraw>700){lastDraw=Date.now();render()}}
@@ -132,7 +140,7 @@ async function scanEverything(){
  await Promise.all(Array.from({length:4},worker));
  if(run!==everythingRun)return;
  everythingScanning=false;spawns=[...found.values()];$('feed-label').textContent='Everything found';
- const summary=`Updated ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} · ${centers.length} areas · ${spawns.length.toLocaleString()} Pokémon${failed?` · ${failed} failed`:''}`;$('updated-label').textContent=summary;$('feed-detail').textContent=`${summary} · refreshes every minute`;
+ const summary=`Updated ${new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} · ${centers.length} areas (${outer.length} wider) · ${spawns.length.toLocaleString()} Pokémon${failed?` · ${failed} failed`:''}`;$('updated-label').textContent=summary;$('feed-detail').textContent=`${summary} · refreshes every minute`;
  setEmptyState(spawns.length?'No sightings found':'Nothing found',spawns.length?'Try changing your filters or search.':'No hotspot returned any Pokémon. Try again in a few minutes.');render();startRefresh();
 }
 function stopEverythingScan(){everythingRun++;everythingScanning=false;everythingPaused=true;$('feed-label').textContent='Scan stopped';$('updated-label').textContent=`Scan stopped · showing ${spawns.length.toLocaleString()} Pokémon`;$('feed-detail').textContent='Auto-refresh paused · press ↻ to scan again';setEmptyState();render();startRefresh()}

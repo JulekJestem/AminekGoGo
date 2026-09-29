@@ -5,7 +5,7 @@
     {
       "country_code": "US",
       "country_name": "US",
-      "total_points": 82699,
+      "total_points": 84347,
       "spots": [
         {
           "lat": 40.7,
@@ -165,6 +165,38 @@
           "point_count": 316,
           "city": "Weehawken",
           "region": "New Jersey",
+          "country_code": "US"
+        },
+        {
+          "lat": 34.01,
+          "lon": -118.496,
+          "point_count": 406,
+          "city": "Santa Monica",
+          "region": "California",
+          "country_code": "US"
+        },
+        {
+          "lat": 41.8826,
+          "lon": -87.6226,
+          "point_count": 800,
+          "city": "Chicago",
+          "region": "Illinois",
+          "country_code": "US"
+        },
+        {
+          "lat": 47.6062,
+          "lon": -122.3321,
+          "point_count": 179,
+          "city": "Seattle",
+          "region": "Washington",
+          "country_code": "US"
+        },
+        {
+          "lat": 25.7907,
+          "lon": -80.13,
+          "point_count": 263,
+          "city": "Miami Beach",
+          "region": "Florida",
           "country_code": "US"
         }
       ]
@@ -339,7 +371,7 @@
     {
       "country_code": "JP",
       "country_name": "JP",
-      "total_points": 6662,
+      "total_points": 7366,
       "spots": [
         {
           "lat": 34.65,
@@ -499,6 +531,14 @@
           "point_count": 122,
           "city": "Ikoma",
           "region": "Nara",
+          "country_code": "JP"
+        },
+        {
+          "lat": 35.455,
+          "lon": 139.6317,
+          "point_count": 704,
+          "city": "Yokohama",
+          "region": "Kanagawa",
           "country_code": "JP"
         }
       ]
@@ -840,7 +880,7 @@
     {
       "country_code": "IT",
       "country_name": "IT",
-      "total_points": 3386,
+      "total_points": 3704,
       "spots": [
         {
           "lat": 41.95,
@@ -976,6 +1016,14 @@
           "point_count": 28,
           "city": "Monte Caminetto",
           "region": "Latium",
+          "country_code": "IT"
+        },
+        {
+          "lat": 45.4642,
+          "lon": 9.19,
+          "point_count": 318,
+          "city": "Milan",
+          "region": "Duomo",
           "country_code": "IT"
         }
       ]
@@ -1293,7 +1341,7 @@
     {
       "country_code": "MY",
       "country_name": "MY",
-      "total_points": 2614,
+      "total_points": 2784,
       "spots": [
         {
           "lat": 1.35,
@@ -1446,6 +1494,14 @@
           "city": "Johor Bahru",
           "region": "Johor",
           "country_code": "MY"
+        },
+        {
+          "lat": 3.1579,
+          "lon": 101.7123,
+          "point_count": 170,
+          "city": "Kuala Lumpur",
+          "region": "KLCC",
+          "country_code": "MY"
         }
       ]
     },
@@ -1581,6 +1637,134 @@
           "city": "Duebendorf / Wasserfurren",
           "region": "Zurich",
           "country_code": "CH"
+        }
+      ]
+    },
+    {
+      "country_code": "TW",
+      "country_name": "TW",
+      "total_points": 1059,
+      "spots": [
+        {
+          "lat": 25.034,
+          "lon": 121.5645,
+          "point_count": 532,
+          "city": "Taipei",
+          "region": "Taipei 101",
+          "country_code": "TW"
+        },
+        {
+          "lat": 25.1368,
+          "lon": 121.5065,
+          "point_count": 527,
+          "city": "Beitou",
+          "region": "Taipei",
+          "country_code": "TW"
+        }
+      ]
+    },
+    {
+      "country_code": "HK",
+      "country_name": "HK",
+      "total_points": 137,
+      "spots": [
+        {
+          "lat": 22.2819,
+          "lon": 114.158,
+          "point_count": 137,
+          "city": "Central",
+          "region": "Hong Kong",
+          "country_code": "HK"
+        }
+      ]
+    },
+    {
+      "country_code": "KR",
+      "country_name": "KR",
+      "total_points": 673,
+      "spots": [
+        {
+          "lat": 37.5663,
+          "lon": 126.9779,
+          "point_count": 673,
+          "city": "Seoul",
+          "region": "Seoul City Hall",
+          "country_code": "KR"
+        }
+      ]
+    },
+    {
+      "country_code": "PH",
+      "country_name": "PH",
+      "total_points": 171,
+      "spots": [
+        {
+          "lat": 14.5547,
+          "lon": 121.0244,
+          "point_count": 171,
+          "city": "Makati",
+          "region": "Metro Manila",
+          "country_code": "PH"
+        }
+      ]
+    },
+    {
+      "country_code": "BR",
+      "country_name": "BR",
+      "total_points": 464,
+      "spots": [
+        {
+          "lat": -23.5614,
+          "lon": -46.6559,
+          "point_count": 464,
+          "city": "S?o Paulo",
+          "region": "Avenida Paulista",
+          "country_code": "BR"
+        }
+      ]
+    },
+    {
+      "country_code": "MX",
+      "country_name": "MX",
+      "total_points": 233,
+      "spots": [
+        {
+          "lat": 19.4326,
+          "lon": -99.1332,
+          "point_count": 233,
+          "city": "Mexico City",
+          "region": "Z?calo",
+          "country_code": "MX"
+        }
+      ]
+    },
+    {
+      "country_code": "AE",
+      "country_name": "AE",
+      "total_points": 797,
+      "spots": [
+        {
+          "lat": 25.0805,
+          "lon": 55.1403,
+          "point_count": 797,
+          "city": "Dubai Marina",
+          "region": "Dubai",
+          "country_code": "AE"
+        }
+      ]
+    },
+    {
+      "country_code": "NZ",
+      "country_name": "NZ",
+      "total_points": 148,
+      "spots": [
+        {
+          "lat": -36.8485,
+          "lon": 174.7633,
+          "point_count": 148,
+          "city": "Auckland",
+          "region": "Auckland CBD",
+          "country_code": "NZ"
         }
       ]
     }
